@@ -1,0 +1,61 @@
+{
+  "name": "@parrotjs/react-lazyload",
+  "version": "0.0.3",
+  "description": "",
+  "main": "dist/parrotreactloading.cjs.js",
+  "module": "dist/parrotreactloading.esm.js",
+  "umd": "dist/parrotreactloading.umd.js",
+  "umdName": "ParrotRcLoading",
+  "types": "dist/types",
+  "scripts": {
+    "dev": "node examples/server.js",
+    "prebuild": "rimraf dist",
+    "build": "rollup -c",
+    "prepub": "npm run build",
+    "pub": "sh release.sh"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/parrot-design/parrot-mini-axios.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/parrot-design/parrot-mini-axios/issues"
+  },
+  "homepage": "https://github.com/parrot-design/parrot-mini-axios#readme",
+  "devDependencies": {
+    "@material-ui/core": "^4.12.2",
+    "@parrotjs/rc-helper-class": "0.0.2",
+    "@types/react": "^17.0.14",
+    "@types/react-dom": "^17.0.9",
+    "css-loader": "^6.2.0",
+    "express": "^4.17.1",
+    "husky": "^7.0.1",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
+    "react-lazyload": "^3.2.0",
+    "rimraf": "^3.0.2",
+    "rollup": "^2.53.2",
+    "rollup-plugin-scss": "^3.0.0",
+    "rollup-plugin-terser": "^7.0.2",
+    "rollup-plugin-typescript2": "^0.30.0",
+    "sass": "^1.36.0",
+    "sass-loader": "^12.1.0",
+    "style-loader": "^3.2.1",
+    "ts-loader": "^9.2.3",
+    "tslint": "^6.1.3",
+    "tslint-loader": "^3.5.4",
+    "typescript": "^4.3.5",
+    "webpack": "^5.45.1",
+    "webpack-dev-middleware": "^5.0.0",
+    "webpack-hot-middleware": "^2.25.0"
+  },
+  "dependencies": {
+    "intersection-observer": "^0.12.0",
+    "intersection-observer-polyfill": "^0.1.0"
+  },
+  "peerDependencies": {
+    "react": ">= 16.8"
+  }
+}
