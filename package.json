@@ -52,7 +52,6 @@
     "webpack-hot-middleware": "^2.25.0"
   },
   "dependencies": {
-    "intersection-observer": "^0.12.0",
     "intersection-observer-polyfill": "^0.1.0"
   },
   "peerDependencies": {
