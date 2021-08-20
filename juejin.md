@@ -38,7 +38,7 @@
 
 # 图片懒加载
 
-## 1.将src替代为更小的base64图片代替
+## 1.将src替代为更小的base64图片代替（后发现浏览器限制无法解析故换成http协议图片）
 
 > 页面中的img，如果没有src属性或者不是一个http链接的地址，浏览器就不会发出请求去下载图片，一旦通过JS设置了src，浏览器才会送请求下载图片并显示。
 
@@ -109,6 +109,45 @@ if(!prevVisible && !visible){
         } 
 ```
 
-# 使用组件时
+# （开源）开源这个组件
 
+该[组件](https://github.com/parrot-design/parrot-rc-lazyload/blob/main/dist/parrotreactlazyload.esm.js)打包后仅4kb大小,核心代码不到20行，阅读起来非常简单，代码里面采用了新的API并加入了proyfill，并没有采用传统的监听滚动+节流，已经发布到github上面。
+
+```js
+//使用方式
+npm install -S @parrotjs/react-lazyload
+
+import LazyLoad from '@parrotjs/react-lazyload'
+
+const url = 'https://img2.baidu.com/it/u=881124525,886726031&fm=15&fmt=auto&gp=0.jpg';
+
+//图片
+<LazyLoad>
+    <img src={url}/>
+</LazyLoad>
+
+//背景图片
+<LazyLoad>
+    <div style={{backgroundImage:url}}/>
+</LazyLoad>
+
+//组件会自动识别是否存在背景图
+<LazyLoad>
+    <div style={{background:url}}/>
+</LazyLoad>
+
+//组件
+<LazyLoad>
+    <div>我在视口才会显示</div>
+</LazyLoad>
+
+```
+
+# API
+
+目前只开放了placeholder这个api 可以自己提供组件为加载时的占位符 未来会开放更多的api
+
+# Github地址
+
+地址在[这里](https://github.com/parrot-design/parrot-rc-lazyload)，欢迎大家使用并star，有项目上的需求可以提出来，我会完善组件。
 

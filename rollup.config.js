@@ -23,12 +23,12 @@ export default {
             sourcemap: false,
             globals:{
                 'react':'React',
-                '@parrotjs/classnames':'ParrotClassname'
+                'intersection-observer-polyfill':'IntersectionObserverPolyfill'
             },
             plugins: [terser()],
         },
     ],
-    external:['react','@parrotjs/classnames'], 
+    external:['react','intersection-observer-polyfill'], 
     plugins: [
         typescript({
             tsconfigOverride: {
