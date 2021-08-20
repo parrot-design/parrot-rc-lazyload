@@ -1,6 +1,6 @@
 {
   "name": "@parrotjs/react-lazyload",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "",
   "main": "dist/parrotreactloading.cjs.js",
   "module": "dist/parrotreactloading.esm.js",
