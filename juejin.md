@@ -44,7 +44,69 @@
 
 ## 2.使用data-src替代
 
-> 我们要在一开始的时候将保存到一个属性中去，方便后续我们进行调用。
+> 我们要在一开始的时候将保存到一个属性中去，方便后续我们进行设置，当然也可以将保存到state中，但是存在局限性。
 
+```js
+//核心代码
+//图片刚加载到页面时
+if(!prevVisible && !visible){
+    if(isImg(childrenProp)){
+        setChildren(React.cloneElement(childrenProp,{src:DEFAULT_URL,datasrc:childrenProp.props.src}))
+    } 
+//当图片进入视图时
+}else if(!prevVisible && visible){
+    if(isImg(childrenProp)){
+        setChildren(React.cloneElement(prevChildren,{src:prevChildren.props.datasrc}))
+    } 
+}
+```
+# 背景图片懒加载
+
+原理和图片懒加载并无区别，主要是将src属性变为乐 style中的backgroundImage或者background属性。
+
+```js
+//核心代码
+ if(!prevVisible && !visible){
+        ......
+                setChildren(React.cloneElement(childrenProp,{
+                    style:{
+                        ...childrenProp.props.style, 
+                        [hasAttribute(childrenProp)]:`url(${DEFAULT_URL})`
+                    },
+                    datasrc:childrenProp.props.style[hasAttribute(childrenProp)]})
+                )}
+        //当图片进入视图时
+        }else if(!prevVisible && visible){
+        ......
+                setChildren(React.cloneElement(prevChildren,{
+                    style:{
+                        ...childrenProp.props.style, 
+                        [hasAttribute(childrenProp)]:prevChildren.props.datasrc
+                    },
+                }))
+            }
+} 
+```
+
+# 组件懒加载
+
+当组件并不是img标签或者并无background-color时，自动判断为组件懒加载，如果是组件懒加载，直接在达到视图的时候将其显示即可。
+
+```js
+//核心代码
+//图片刚加载到页面时
+        if(!prevVisible && !visible){
+            ......
+        //当图片进入视图时
+        }else if(!prevVisible && visible){
+            if(isImg(childrenProp)){
+                ...
+            } else if(isBackgroundImg(childrenProp)){ 
+                ...
+            }else{
+                setChildren(childrenProp)
+            }
+        } 
+```
 
 

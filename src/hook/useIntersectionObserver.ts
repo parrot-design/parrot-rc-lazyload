@@ -11,8 +11,7 @@ export default function useIntersectionObserver(options?:any){
     const [visible,setVisible]=useState(false);
 
     const handleVisible=useCallback((entries:any)=>{
-        let entry=entries[0]; 
-        console.log("entry.isIntersecting",entry)
+        let entry=entries[0];  
         setVisible(entry.isIntersecting);
     },[]);
 

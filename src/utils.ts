@@ -1,7 +1,7 @@
 
 let URL_REGULAR=/^url\(.+\)$/;
 let DEFAULT_ATTRIBUTES=['background','backgroundImage'];
-export const DEFAULT_URL='data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
+export const DEFAULT_URL='https://cdn.jsdelivr.net/gh/parrot-design/parrot-access-imgs/lazyload.gif';
 
 //是否初始化了DEFAULT_URL
 function hasDefaultSrc(children:any){
@@ -26,14 +26,15 @@ export function isLoadImg(children:any){
 //判断是背景图
 export function isBackgroundImg(children:any){
     let style=children.props.style;
-    return style.backgroundImage || (style.background && URL_REGULAR.test(style.background));
+    return !!style.backgroundImage || (style.background && URL_REGULAR.test(style.background));
 }
 //获取正确的样式
-export function hasAttribute(style:any,arr=DEFAULT_ATTRIBUTES){
-    let total=Object.keys(style).reduce((total:any,current)=>{
+export function hasAttribute(children:any,arr=DEFAULT_ATTRIBUTES){
+    let matches=Object.keys(children.props.style).reduce((total:any,current)=>{
         if(arr.indexOf(current)>-1){
             return total.concat(current);
         }
+        return total;
     },[]);
-    return total[total.length-1];
+    return matches[matches.length-1];
 }

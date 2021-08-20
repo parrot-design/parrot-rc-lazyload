@@ -10,21 +10,17 @@ const App = () => {
 
   return (
     <>
-      <div style={{ height: 400 }}>
-        <img src={url1} style={{ height: 400 }} />
+      <div style={{ height: 400,width:300,backgroundImage:`url("${url1}")`}}> 
       </div>
-      <div style={{ height: 400 }}>
-        <img src={url2} style={{ height: 400 }} />
+      <div style={{ height: 400,width:300,backgroundImage:`url("${url2}")` }}> 
       </div>
-      <div style={{ height: 400 }}>
-        <img src={url3} style={{ height: 400 }} />
+      <div style={{ height: 400,width:300,backgroundImage:`url("${url3})"` }}> 
       </div>
-      <div style={{ height: 400 }}>
-        <img src={url4} style={{ height: 400 }} />
+      <div style={{ height: 400,width:300,backgroundImage:`url("${url4})"` }}> 
       </div>
  
       <Lazy>
-        <img src={url4} style={{ height: 400 }} />
+        <div style={{ height: 400,width:300,backgroundColor:'yellow' }} />
       </Lazy>
     </>
   )
