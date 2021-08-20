@@ -109,4 +109,6 @@ if(!prevVisible && !visible){
         } 
 ```
 
+# 使用组件时
+
 

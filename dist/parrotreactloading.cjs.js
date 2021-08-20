@@ -1,58 +1,98 @@
 'use strict';
 
 var React = require('react');
-var classnames = require('@parrotjs/classnames');
+var IntersectionObserver = require('intersection-observer-polyfill');
 
 function _interopDefaultLegacy (e) { return e && typeof e === 'object' && 'default' in e ? e : { 'default': e }; }
 
 var React__default = /*#__PURE__*/_interopDefaultLegacy(React);
-var classnames__default = /*#__PURE__*/_interopDefaultLegacy(classnames);
+var IntersectionObserver__default = /*#__PURE__*/_interopDefaultLegacy(IntersectionObserver);
 
-/*! *****************************************************************************
-Copyright (c) Microsoft Corporation.
-
-Permission to use, copy, modify, and/or distribute this software for any
-purpose with or without fee is hereby granted.
-
-THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH
-REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY
-AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT,
-INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM
-LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
-OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
-PERFORMANCE OF THIS SOFTWARE.
-***************************************************************************** */
-
-function __rest(s, e) {
-    var t = {};
-    for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0)
-        t[p] = s[p];
-    if (s != null && typeof Object.getOwnPropertySymbols === "function")
-        for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) {
-            if (e.indexOf(p[i]) < 0 && Object.prototype.propertyIsEnumerable.call(s, p[i]))
-                t[p[i]] = s[p[i]];
+let URL_REGULAR = /^url\(.+\)$/;
+let DEFAULT_ATTRIBUTES = ['background', 'backgroundImage'];
+const DEFAULT_URL = 'https://cdn.jsdelivr.net/gh/parrot-design/parrot-access-imgs/lazyload.gif';
+//判断是图片
+function isImg(children) {
+    return children.type === 'img';
+}
+//判断是背景图
+function isBackgroundImg(children) {
+    let style = children.props.style;
+    return !!style.backgroundImage || (style.background && URL_REGULAR.test(style.background));
+}
+//获取正确的样式
+function hasAttribute(children, arr = DEFAULT_ATTRIBUTES) {
+    let matches = Object.keys(children.props.style).reduce((total, current) => {
+        if (arr.indexOf(current) > -1) {
+            return total.concat(current);
         }
-    return t;
+        return total;
+    }, []);
+    return matches[matches.length - 1];
 }
 
-const Loading = React__default['default'].forwardRef((props, ref) => {
-    const SIZE = 44;
-    const { prefixCls: customizedPrefixCls = 'parrot', componentName = 'loading', className, size = 40, style, color = 'primary', overlayColor = "rgba(0,0,0,.1)", thickness = 3.6, children, loading = true, description, descriptionWrapperClass } = props, restProps = __rest(props, ["prefixCls", "componentName", "className", "size", "style", "color", "overlayColor", "thickness", "children", "loading", "description", "descriptionWrapperClass"]);
-    const prefixCls = customizedPrefixCls + '-' + componentName;
-    const classes = classnames__default['default'](prefixCls, className);
-    const loadingNode = (React__default['default'].createElement("div", Object.assign({ className: classes }, restProps, { style: Object.assign({ width: size, height: size }, style), ref: ref }),
-        React__default['default'].createElement("svg", { className: classnames__default['default'](`${prefixCls}-svg`), viewBox: `${SIZE / 2} ${SIZE / 2} ${SIZE} ${SIZE}` },
-            React__default['default'].createElement("circle", { className: classnames__default['default'](`${prefixCls}-circle`, `${prefixCls}-indeterminate`, {
-                    [`${prefixCls}-${color}`]: color
-                }), cx: SIZE, cy: SIZE, r: (SIZE - thickness) / 2, fill: "none", strokeWidth: thickness }))));
-    return children ?
-        React__default['default'].createElement("div", { className: classnames__default['default'](`${prefixCls}-container`), ref: ref },
-            loading && (React__default['default'].createElement("div", { className: classnames__default['default'](`${prefixCls}-overlay`), style: { backgroundColor: overlayColor } }, description ? (React__default['default'].createElement("div", { className: classnames__default['default'](`${prefixCls}-overlay-descriptor-container`, descriptionWrapperClass) },
-                React__default['default'].createElement("div", null, loadingNode),
-                React__default['default'].createElement("div", { style: { lineHeight: "initial" } }, description))) : loadingNode)),
-            children) :
-        loadingNode;
-});
-var Loading$1 = React__default['default'].memo(Loading);
+function useIntersectionObserver(options) {
+    const root = React.useRef(null);
+    const observer = React.useRef(null);
+    const [visible, setVisible] = React.useState(false);
+    const handleVisible = React.useCallback((entries) => {
+        let entry = entries[0];
+        setVisible(entry.isIntersecting);
+    }, []);
+    React.useEffect(() => {
+        observer.current = new IntersectionObserver__default['default'](handleVisible);
+        observer.current.observe(root.current);
+    }, []);
+    return {
+        root,
+        visible
+    };
+}
 
-module.exports = Loading$1;
+function usePrevState(state) {
+    const prevState = React__default['default'].useRef(state);
+    React.useEffect(() => {
+        prevState.current = state;
+    }, [state]);
+    return prevState.current;
+}
+
+const LazyLoad = (props) => {
+    const { children: childrenProp, prefixCls: customizedPrefixCls = 'parrot', componentName = 'lazyload', placeholder } = props;
+    const prefixCls = customizedPrefixCls + '-' + componentName;
+    const { root, visible } = useIntersectionObserver();
+    const prevVisible = usePrevState(visible);
+    const [children, setChildren] = React.useState();
+    const prevChildren = usePrevState(children);
+    React__default['default'].useEffect(() => {
+        //图片刚加载到页面时
+        if (!prevVisible && !visible) {
+            if (isImg(childrenProp)) {
+                setChildren(React__default['default'].cloneElement(childrenProp, { src: DEFAULT_URL, datasrc: childrenProp.props.src }));
+            }
+            else if (isBackgroundImg(childrenProp)) {
+                setChildren(React__default['default'].cloneElement(childrenProp, {
+                    style: Object.assign(Object.assign({}, childrenProp.props.style), { [hasAttribute(childrenProp)]: `url(${DEFAULT_URL})` }),
+                    datasrc: childrenProp.props.style[hasAttribute(childrenProp)]
+                }));
+            }
+            //当图片进入视图时
+        }
+        else if (!prevVisible && visible) {
+            if (isImg(childrenProp)) {
+                setChildren(React__default['default'].cloneElement(prevChildren, { src: prevChildren.props.datasrc }));
+            }
+            else if (isBackgroundImg(childrenProp)) {
+                setChildren(React__default['default'].cloneElement(prevChildren, {
+                    style: Object.assign(Object.assign({}, childrenProp.props.style), { [hasAttribute(childrenProp)]: prevChildren.props.datasrc }),
+                }));
+            }
+            else {
+                setChildren(childrenProp);
+            }
+        }
+    }, [visible, childrenProp]);
+    return (React__default['default'].createElement("div", { className: prefixCls, ref: root }, children ? children : placeholder ? placeholder : React__default['default'].createElement("div", { className: `${prefixCls}-placeholder` })));
+};
+
+module.exports = LazyLoad;

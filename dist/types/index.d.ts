@@ -1,17 +1,7 @@
-import React from 'react';
-export { default } from './Loading';
-export interface ILoadingProps {
-    component?: any;
+export { default } from './LazyLoad';
+export interface ILazyLoadProps {
     prefixCls?: string;
     componentName?: string;
-    className?: string;
-    size?: number;
-    style?: React.CSSProperties;
-    color?: 'inherit' | 'primary' | 'danger' | 'warning' | 'info' | 'success' | 'default' | 'second';
-    thickness?: number;
+    placeholder?: any;
     children?: any;
-    loading?: boolean;
-    overlayColor?: string;
-    description?: string;
-    descriptionWrapperClass?: string;
 }
